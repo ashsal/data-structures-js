@@ -160,6 +160,54 @@ class AVLTree {
     }
     return result;
   }
+
+  delete(node, key) {
+    if (!node) return node;
+
+    if (key < node.key) {
+      node.left = this.delete(node.left, key);
+    } else if (key > node.key) {
+      node.right = this.delete(node.right, key);
+    } else {
+      // Node to be deleted found
+      if (!node.left || !node.right) {
+        // Node with one child or no child
+        const temp = node.left ? node.left : node.right;
+        node = temp; // Replace with the child (or null if no child)
+      } else {
+        // Node with two children
+        const temp = this.minValueNode(node.right); // In-order successor
+        node.key = temp.key; // Replace value with successor
+        node.right = this.delete(node.right, temp.key); // Delete successor
+      }
+    }
+
+    if (!node) return node;
+
+    node.height = Math.max(this.height(node.left), this.height(node.right)) + 1;
+
+    const balance = this.getBalanceFactor(node);
+
+    if (balance > 1 && this.getBalanceFactor(node.left) >= 0) {
+      return this.rightRotate(node);
+    }
+
+    if (balance > 1 && this.getBalanceFactor(node.left) < 0) {
+      node.left = this.leftRotate(node.left);
+      return this.rightRotate(node);
+    }
+
+    if (balance < -1 && this.getBalanceFactor(node.right) <= 0) {
+      return this.leftRotate(node);
+    }
+
+    if (balance < -1 && this.getBalanceFactor(node.right) > 0) {
+      node.right = this.rightRotate(node.right);
+      return this.leftRotate(node);
+    }
+
+    return node;
+  }
 }
 const avlTree = new AVLTree();
 avlTree.add(10);
