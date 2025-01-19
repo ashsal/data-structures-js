@@ -73,6 +73,59 @@ class NaryTree {
       this.depth(child);
     }
   }
+
+  delete(value) {
+    if (!this.root) {
+      console.log("Tree is empty.");
+      return;
+    }
+
+    let queue = [this.root];
+    let nodeToDelete = null;
+    let lastNode = null;
+    let parentOfLastNode = null;
+
+    // Perform BFS to find the node to delete and track the deepest node
+    while (queue.length > 0) {
+      lastNode = queue.shift();
+
+      // Check if this is the node to delete
+      if (lastNode.value === value) {
+        nodeToDelete = lastNode;
+      }
+
+      // Enqueue children for BFS
+      if (lastNode.left) {
+        queue.push(lastNode.left);
+        parentOfLastNode = lastNode; // Track parent of the last node
+      }
+      if (lastNode.right) {
+        queue.push(lastNode.right);
+        parentOfLastNode = lastNode; // Track parent of the last node
+      }
+    }
+
+    // If the node to delete was not found, return
+    if (!nodeToDelete) {
+      console.log(`Node with value ${value} not found.`);
+      return;
+    }
+
+    // Replace the value of the node to delete with the deepest node's value
+    nodeToDelete.value = lastNode.value;
+
+    // Delete the deepest node
+    if (parentOfLastNode) {
+      if (parentOfLastNode.left === lastNode) {
+        parentOfLastNode.left = null;
+      } else if (parentOfLastNode.right === lastNode) {
+        parentOfLastNode.right = null;
+      }
+    } else {
+      // If there's no parent (only root exists), set the root to null
+      this.root = null;
+    }
+  }
 }
 
 const myNaryTree = new NaryTree();
