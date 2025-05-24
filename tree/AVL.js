@@ -56,7 +56,7 @@ class AVLTree {
 
     if (balance > 1 && value > node.left.value) {
       node.left = this.rotateLeft(node.left);
-      return this.rightRotate(node);
+      return this.rotateRight(node);
     }
 
     if (balance < -1 && value < node.right.value) {
@@ -189,21 +189,21 @@ class AVLTree {
     const balance = this.getBalanceFactor(node);
 
     if (balance > 1 && this.getBalanceFactor(node.left) >= 0) {
-      return this.rightRotate(node);
+      return this.rotateRight(node);
     }
 
     if (balance > 1 && this.getBalanceFactor(node.left) < 0) {
-      node.left = this.leftRotate(node.left);
-      return this.rightRotate(node);
+      node.left = this.rotateLeft(node.left);
+      return this.rotateRight(node);
     }
 
     if (balance < -1 && this.getBalanceFactor(node.right) <= 0) {
-      return this.leftRotate(node);
+      return this.rotateLeft(node);
     }
 
     if (balance < -1 && this.getBalanceFactor(node.right) > 0) {
-      node.right = this.rightRotate(node.right);
-      return this.leftRotate(node);
+      node.right = this.rotateRight(node.right);
+      return this.rotateLeft(node);
     }
 
     return node;
